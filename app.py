@@ -8,6 +8,8 @@ DATA_URL = (
 "data/Motor_Vehicle_Collisions_Crashes.csv"
 )
 
+df = pd.read_csv(DATA_URL, parse_dates=['DATE'])
+
 st.title("Motor Vehile Collisions in New York City")
 st.markdown("This application is a Streamlit dashboard that can be used "
 "to analyze motor vehicle collisions in NYC")
