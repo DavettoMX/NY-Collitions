@@ -20,7 +20,7 @@ def load_data(nrows):
     data.rename(columns={'crash_date_crash_time': 'date/time'}, inplace=True)
     return data
 
-data = load_data(100000)
+data = load_data(40_000)
 original_data = data
 
 st.header("Where are the most people Injured in NYC?")
