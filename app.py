@@ -4,10 +4,8 @@ import numpy as np
 import pydeck as pdk
 
 DATA_URL = (
-"../data/Motor_Vehicle_Collisions_-_Crashes.csv"
+"/data/Motor_Vehicle_Collisions_-_Crashes.csv"
 )
-
-df = pd.read_csv(DATA_URL, nrows=100)
 
 st.title("Motor Vehile Collisions in New York City")
 st.markdown("This application is a Streamlit dashboard that can be used "
