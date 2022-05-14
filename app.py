@@ -4,7 +4,7 @@ import numpy as np
 import pydeck as pdk
 
 DATA_URL = (
-"/data/Motor_Vehicle_Collisions_Crashes.csv"
+"../data/Motor_Vehicle_Collisions_Crashes.csv"
 )
 
 st.title("Motor Vehile Collisions in New York City")
