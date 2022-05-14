@@ -13,14 +13,14 @@ st.markdown("This application is a Streamlit dashboard that can be used "
 
 @st.cache(persist=True)
 def load_data(nrows):
-    data = pd.read_csv(DATA_URL, nrows=nrows, parse_dates=[['CRASH_DATE', 'CRASH_TIME']])
+    data = pd.read_csv(DATA_URL, nrows=nrows)
     data.dropna(subset=['LATITUDE', 'LONGITUDE'], inplace=True)
     lowercase = lambda x: str(x).lower()
     data.rename(lowercase, axis='columns', inplace=True)
     data.rename(columns={'crash_date_crash_time': 'date/time'}, inplace=True)
     return data
 
-data = load_data(40_000)
+data = load_data(80_000)
 original_data = data
 
 st.header("Where are the most people Injured in NYC?")
