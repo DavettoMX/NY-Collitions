@@ -2,7 +2,7 @@ import streamlit as st
 import pandas as pd
 import numpy as np
 import pydeck as pdk
-import plotly.express as px
+# import plotly.express as px
 
 DATA_URL = (
 "/home/rhyme/Desktop/Project/Motor_Vehicle_Collisions_-_Crashes.csv"
@@ -58,14 +58,14 @@ st.write(pdk.Deck(
     ],
 ))
 
-st.subheader("Breakdown by Minute between %i:00 and %i:00" % (hour, (hour + 1) %24))
-filtered = data[
-    (data['date/time'].dt.hour >= hour) & (data['date/time'].dt.hour < (hour + 1))
-]
-histogram = np.histogram(filtered['date/time'].dt.minute, bins=60, range=(0, 60))[0]
-chart_data = pd.DataFrame({'minute': range(60), 'crashes': histogram})
-figure = px.bar(chart_data, x = 'minute', y = 'crashes', hover_data = ['minute', 'crashes'], height = 400)
-st.write(figure)
+# st.subheader("Breakdown by Minute between %i:00 and %i:00" % (hour, (hour + 1) %24))
+# filtered = data[
+#     (data['date/time'].dt.hour >= hour) & (data['date/time'].dt.hour < (hour + 1))
+# ]
+# histogram = np.histogram(filtered['date/time'].dt.minute, bins=60, range=(0, 60))[0]
+# chart_data = pd.DataFrame({'minute': range(60), 'crashes': histogram})
+# figure = px.bar(chart_data, x = 'minute', y = 'crashes', hover_data = ['minute', 'crashes'], height = 400)
+# st.write(figure)
 
 st.header("Top 5 Dangerous Streets by Affected Type")
 select = st.selectbox('Affected Type of People', ['Pedestrians', 'Cyclists', 'Motorists'])
