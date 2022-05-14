@@ -64,7 +64,10 @@ st.write(pdk.Deck(
 
 # Most Common Vehicle Types
 st.header("The most common vehicle types in collisions")
-px.bar(data, x='vehicle type code 2', y='injured_persons', color='vehicle type code 1', height=600)
+# px.bar(data, x='vehicle type code 2', y='injured_persons', color='vehicle type code 1', height=600)
+df = px.data.tips()
+fig = px.bar(data, x='vehicle type code 2', y='injured_persons')
+st.plotly_chart(fig)
 
 if st.checkbox("Show Raw Data", False):
     st.subheader('Raw Data')
