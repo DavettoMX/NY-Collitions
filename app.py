@@ -1,36 +1,38 @@
+import pip
+pip.main(["install","plotly.express"])
 import streamlit as st
 import pandas as pd
 import numpy as np
 import pydeck as pdk
-# import plotly.express as px
+import plotly.express as px
 
 DATA_URL = (
-"data/Motor_Vehicle_Collisions_Crashes.csv"
+"data/Motor_Vehicle_Collisions_-_Crashes.csv"
 )
-
-df = pd.read_csv(DATA_URL, parse_dates=['DATE'])
 
 st.title("Motor Vehile Collisions in New York City")
 st.markdown("This application is a Streamlit dashboard that can be used "
 "to analyze motor vehicle collisions in NYC")
 
 @st.cache(persist=True)
-def load_data(nrows):
-    data = pd.read_csv(DATA_URL, nrows=nrows, parse_dates=[['CRASH_DATE', 'CRASH_TIME']])
+def load_data(rows):
+    data = pd.read_csv(DATA_URL, nrows=rows, parse_dates=[['CRASH DATE', 'CRASH TIME']])
     data.dropna(subset=['LATITUDE', 'LONGITUDE'], inplace=True)
     lowercase = lambda x: str(x).lower()
-    data.rename(lowercase, axis='columns', inplace=True)
-    data.rename(columns={'crash_date_crash_time': 'date/time'}, inplace=True)
+    data.rename(lowercase, axis='columns', inplace=True) # lowercase all column names
+    data.rename(columns={'crash date_crash time': 'date/time', 'number of persons injured': 'injured_persons'}, inplace=True)
     return data
 
 data = load_data(100000)
 original_data = data
 
+# Visualize 2D map
 st.header("Where are the most people Injured in NYC?")
 injured_people = st.slider("Number of persons injured in vehicle collisions", 0, 19)
 st.map(data.query("injured_persons >= @injured_people")[["latitude", "longitude"]].dropna(how="any"))
 
 
+# Visualize 3D map
 st.header("How many collisions occur during a given time of day?")
 hour = st.slider("Hour to look at", 0, 23)
 data = data[data['date/time'].dt.hour == hour]
@@ -43,8 +45,8 @@ st.write(pdk.Deck(
     initial_view_state = {
         "latitude": midpoint[0],
         "longitude": midpoint[1],
-        "zoom": 11,
-        "pitch": 50,
+        "zoom": 15,
+        "pitch": 70,
     },
     layers = [
         pdk.Layer(
@@ -60,27 +62,9 @@ st.write(pdk.Deck(
     ],
 ))
 
-# st.subheader("Breakdown by Minute between %i:00 and %i:00" % (hour, (hour + 1) %24))
-# filtered = data[
-#     (data['date/time'].dt.hour >= hour) & (data['date/time'].dt.hour < (hour + 1))
-# ]
-# histogram = np.histogram(filtered['date/time'].dt.minute, bins=60, range=(0, 60))[0]
-# chart_data = pd.DataFrame({'minute': range(60), 'crashes': histogram})
-# figure = px.bar(chart_data, x = 'minute', y = 'crashes', hover_data = ['minute', 'crashes'], height = 400)
-# st.write(figure)
-
-st.header("Top 5 Dangerous Streets by Affected Type")
-select = st.selectbox('Affected Type of People', ['Pedestrians', 'Cyclists', 'Motorists'])
-
-if select == 'Pedestrians':
-    st.write(original_data.query("injured_pedestrians >= 1")[["on_street_name", "injured_pedestrians"]].sort_values(by = ["injured_pedestrians"], ascending = False).dropna(how = 'any')[:5])
-elif select == 'Cyclists':
-    st.write(original_data.query("injured_cyclists >= 1")[["on_street_name", "injured_cyclists"]].sort_values(by = ["injured_cyclists"], ascending = False).dropna(how = 'any')[:5])
-else:
-    st.write(original_data.query("injured_motorists >= 1")[["on_street_name", "injured_motorists"]].sort_values(by = ["injured_motorists"], ascending = False).dropna(how = 'any')[:5])
-
-
-
+# Most Common Vehicle Types
+st.header("The most common vehicle types in collisions")
+px.bar(data, x='vehicle type code 2', y='injured_persons', color='vehicle type code 1', height=600)
 
 if st.checkbox("Show Raw Data", False):
     st.subheader('Raw Data')
